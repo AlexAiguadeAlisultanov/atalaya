@@ -1,0 +1,899 @@
+/* Estilos del apartado OSINT: conmutador, entrada con varias semillas, grafo de
+   entidades, ficha y resumen por tipo. Hereda tokens y piezas comunes de
+   index.css, y reutiliza las clases de buscador/resultado/ficha de la
+   herramienta (bus-*, res-*, pa-*) para que las dos secciones se sientan una. */
+
+/* ===================== CONMUTADOR DE APARTADO ===================== */
+.apartado-tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  margin: 0 auto 36px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surf1);
+}
+.apartado-tab {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mut);
+  border: 0;
+  background: none;
+  padding: 9px 20px;
+  border-radius: 999px;
+  transition: color 0.18s ease, background 0.18s ease;
+}
+.apartado-tab:hover {
+  color: var(--ink);
+}
+.apartado-tab--activo {
+  color: #0a0c14;
+  font-weight: 700;
+  background: linear-gradient(180deg, var(--violet-2), var(--violet));
+}
+.apartado-conmutador {
+  display: flex;
+  justify-content: center;
+}
+
+/* ===================== ENTRADA ===================== */
+.osint-demos {
+  margin-bottom: 40px;
+}
+.osint-demos .bus-rejilla {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  margin-bottom: 0;
+}
+.osint-form {
+  margin-top: 12px;
+}
+.osint-filas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.osint-fila {
+  display: grid;
+  grid-template-columns: 150px 1fr 40px;
+  gap: 10px;
+  align-items: center;
+}
+.osint-tipo {
+  display: block;
+}
+.osint-tipo select {
+  width: 100%;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  background: var(--base);
+  border: 1px solid var(--line);
+  border-radius: var(--r-s);
+  padding: 12px 10px;
+  appearance: none;
+  cursor: pointer;
+}
+.osint-tipo select:focus {
+  outline: none;
+  border-color: var(--violet);
+}
+.osint-valor {
+  width: 100%;
+}
+.osint-valor--mal {
+  border-color: rgba(255, 107, 53, 0.55);
+}
+.osint-quitar {
+  width: 40px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--r-s);
+  background: var(--surf1);
+  color: var(--mut);
+  transition: border-color 0.18s ease, color 0.18s ease;
+}
+.osint-quitar:hover:not(:disabled) {
+  color: var(--ink);
+  border-color: var(--crit);
+}
+.osint-quitar:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.osint-anadir {
+  margin-top: 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--violet-2);
+  background: none;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-s);
+  padding: 10px 14px;
+  transition: border-color 0.18s ease, color 0.18s ease;
+}
+.osint-anadir:hover:not(:disabled) {
+  border-color: var(--violet);
+  color: var(--ink);
+}
+.osint-anadir:disabled {
+  color: var(--dim);
+  cursor: not-allowed;
+}
+.osint-form-pie {
+  margin-top: 18px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===================== RESULTADO: cabecera y cifras ===================== */
+.osint-mas {
+  font-family: var(--mono);
+  font-size: 0.5em;
+  color: var(--mut);
+  vertical-align: middle;
+  margin-left: 6px;
+}
+.osint-semillas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.osint-semilla {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 12px;
+  background: var(--surf1);
+}
+.osint-semilla-tipo {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--violet-2);
+}
+.osint-cifras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  padding: 20px 24px;
+}
+.osint-cifra {
+  text-align: center;
+}
+.osint-cifra b {
+  display: block;
+  font-family: var(--disp);
+  font-size: 30px;
+  line-height: 1;
+  color: var(--ink);
+}
+.osint-cifra span {
+  display: block;
+  margin-top: 6px;
+  font-size: 11.5px;
+  color: var(--mut);
+}
+
+/* ===================== GRAFO DE ENTIDADES ===================== */
+.osint-explora {
+  grid-template-columns: 1.2fr 0.8fr;
+}
+.osint-lienzo {
+  height: 580px;
+}
+.og-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(120% 90% at 50% 46%, rgba(124, 92, 255, 0.05), transparent 60%);
+}
+.og {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+  touch-action: none;
+  cursor: grab;
+}
+.og:active {
+  cursor: grabbing;
+}
+.og-wrap--plano .og {
+  touch-action: auto;
+  cursor: default;
+}
+
+/* --- profundidad de fondo --- */
+.og-ring {
+  fill: none;
+  stroke: rgba(124, 92, 255, 0.1);
+  stroke-width: 1;
+}
+.og-ring--ext {
+  stroke: rgba(124, 92, 255, 0.06);
+  stroke-dasharray: 3 9;
+}
+
+/* --- aristas --- */
+.og-edge {
+  fill: none;
+  stroke-linecap: round;
+}
+.og-edgewrap {
+  transition: opacity 0.2s ease;
+}
+.og-edgewrap--dim {
+  opacity: 0.1;
+}
+.og-flow {
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 3 24;
+  opacity: 0.9;
+  animation: og-flow 1.5s linear infinite;
+}
+@keyframes og-flow {
+  to {
+    stroke-dashoffset: -27;
+  }
+}
+.og-edgelabel {
+  font-family: var(--mono);
+  font-size: 17px;
+  fill: var(--mut);
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: #05070d;
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+/* --- nodos --- */
+.og-nodo {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.og-nodo:focus {
+  outline: none;
+}
+.og-nodo--dim {
+  opacity: 0.16;
+}
+.og-halo {
+  opacity: 0.4;
+  transition: opacity 0.2s ease, stroke-width 0.2s ease;
+}
+.og-nodo--foco .og-halo {
+  opacity: 0.9;
+  stroke-width: 2.6;
+}
+.og-core--seed {
+  filter: drop-shadow(0 0 20px rgba(124, 92, 255, 0.8));
+}
+.og-selring {
+  opacity: 0.85;
+}
+.og-brecha {
+  opacity: 0.65;
+  animation: og-brecha 1.4s ease-in-out infinite;
+  filter: drop-shadow(0 0 6px rgba(255, 45, 85, 0.7));
+}
+@keyframes og-brecha {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.14;
+  }
+}
+
+/* --- etiquetas (unidades de viewBox; contorno oscuro para legibilidad) --- */
+.og-label {
+  font-family: var(--mono);
+  font-size: 21px;
+  fill: var(--mut);
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: #05070d;
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+.og-label--seed {
+  fill: var(--ink);
+  font-size: 27px;
+  letter-spacing: 0.02em;
+}
+.og-label--brecha {
+  fill: #ff8da5;
+}
+.og-label--persona {
+  fill: #9fe9cf;
+}
+.og-label--foco {
+  fill: var(--ink);
+}
+
+/* --- leyenda de tipos --- */
+.og-leyenda {
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  max-width: 64%;
+  pointer-events: none;
+}
+.og-ley {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--mut);
+}
+.og-ley i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+/* --- controles de zoom / centrado --- */
+.og-ctrl {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.og-ctrl button {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--r-s);
+  background: rgba(11, 15, 23, 0.72);
+  backdrop-filter: blur(6px);
+  color: var(--mut);
+  font-family: var(--mono);
+  font-size: 18px;
+  line-height: 1;
+  transition: border-color 0.18s ease, color 0.18s ease;
+}
+.og-ctrl button:hover {
+  color: var(--ink);
+  border-color: var(--violet);
+}
+.og-ctrl-fit {
+  font-size: 0;
+}
+
+/* ===================== FICHA (añadidos sobre .pa) ===================== */
+.og-confianza {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.og-confianza i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+.og-fuentes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.og-fuente {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--mut);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+}
+.og-enlace {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--violet-2);
+  word-break: break-all;
+}
+.og-enlace:hover {
+  color: var(--ink);
+}
+.og-meta {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.og-meta-fila {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+}
+.og-meta-fila dt {
+  color: var(--dim);
+}
+.og-meta-fila dd {
+  margin: 0;
+  color: var(--ink);
+  text-align: right;
+}
+
+/* ===================== RESUMEN POR TIPO ===================== */
+.osint-resumen-caja {
+  max-height: 580px;
+  overflow-y: auto;
+}
+.og-resumen {
+  display: flex;
+  flex-direction: column;
+}
+.og-grupo {
+  border-bottom: 1px solid rgba(27, 36, 54, 0.6);
+  padding: 14px 18px;
+}
+.og-grupo:last-child {
+  border-bottom: 0;
+}
+.og-grupo-cab {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mut);
+  font-weight: 500;
+  margin: 0 0 8px;
+}
+.og-grupo-punto {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+}
+.og-grupo-n {
+  margin-left: auto;
+  color: var(--dim);
+  letter-spacing: 0;
+}
+.og-grupo-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.og-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--r-s);
+  background: none;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+.og-item:hover {
+  background: rgba(124, 92, 255, 0.06);
+}
+.og-item--activa {
+  background: rgba(124, 92, 255, 0.12);
+}
+.og-item-etq {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: var(--ink);
+  min-width: 0;
+  word-break: break-word;
+}
+.og-item-semilla {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--violet-2);
+  border: 1px solid rgba(124, 92, 255, 0.4);
+  border-radius: 999px;
+  padding: 1px 7px;
+  flex: none;
+}
+.og-item-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  color: var(--dim);
+}
+.og-item-fuentes {
+  font-size: 10.5px;
+  color: var(--dim);
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.og-item-conf {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 900px) {
+  .osint-explora {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 767px) {
+  .osint-fila {
+    grid-template-columns: 120px 1fr 40px;
+  }
+  .osint-lienzo {
+    height: 440px;
+  }
+  .osint-resumen-caja {
+    max-height: none;
+  }
+  /* Respaldo plano: sin flujo ni aura; etiquetas algo mayores para que se lean. */
+  .og-flow,
+  .og-brecha {
+    animation: none;
+  }
+  .og-label {
+    font-size: 25px;
+  }
+  .og-leyenda {
+    max-width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .og-flow,
+  .og-brecha {
+    animation: none;
+  }
+}
+
+/* ===================== DOSSIER ===================== */
+.dossier {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 8px 0 60px;
+}
+.dossier-barra {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.dossier-doc {
+  position: relative;
+  background: linear-gradient(180deg, var(--surf1), rgba(18, 24, 38, 0.6));
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 40px 44px;
+}
+.dossier-cab {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 20px;
+}
+.dossier-marca {
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  color: var(--violet-2);
+  text-transform: uppercase;
+  margin: 0 0 10px;
+}
+.dossier-cab h1 {
+  font-family: var(--disp);
+  font-size: clamp(26px, 4vw, 40px);
+  margin: 0;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+.dossier-sub {
+  color: var(--mut);
+  margin: 10px 0 4px;
+  font-size: 14px;
+}
+.dossier-fuentes {
+  color: var(--dim);
+  font-size: 11px;
+  margin: 0;
+}
+.dossier-aviso {
+  color: var(--med);
+  font-size: 12px;
+  margin-top: 8px;
+}
+.dossier-sec {
+  margin-top: 28px;
+}
+.dossier-sec h2 {
+  font-family: var(--disp);
+  font-size: 17px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  margin: 0 0 14px;
+}
+.dossier-num {
+  color: var(--violet-2);
+  font-size: 13px;
+}
+.dossier-dato {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 10px;
+  padding: 4px 0;
+  font-size: 13.5px;
+}
+.dossier-k {
+  color: var(--dim);
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding-top: 2px;
+}
+.dossier-v {
+  color: var(--ink);
+}
+.dossier-identidad,
+.dossier-infra {
+  padding: 10px 0 14px;
+  border-bottom: 1px solid rgba(27, 36, 54, 0.5);
+}
+.dossier-identidad:last-child,
+.dossier-infra:last-child {
+  border-bottom: 0;
+}
+.dossier-identidad h3,
+.dossier-infra h3 {
+  font-family: var(--mono);
+  font-size: 15px;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+.dossier-conf {
+  font-size: 11px;
+  color: var(--mut);
+  font-weight: 400;
+}
+.dossier-hallazgos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.dossier-hallazgo {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 13.5px;
+  color: var(--ink);
+  border-left: 3px solid var(--line);
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.015);
+  border-radius: 0 8px 8px 0;
+}
+.dossier-hallazgo.sev-alta {
+  border-left-color: var(--crit);
+}
+.dossier-hallazgo.sev-media {
+  border-left-color: var(--med);
+}
+.dossier-hallazgo.sev-baja {
+  border-left-color: var(--low);
+}
+.dossier-sev {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding-top: 2px;
+  min-width: 46px;
+  color: var(--mut);
+}
+.sev-alta .dossier-sev {
+  color: var(--crit);
+}
+.sev-media .dossier-sev {
+  color: var(--med);
+}
+.sev-baja .dossier-sev {
+  color: var(--low);
+}
+.dossier-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0 4px;
+  font-size: 12.5px;
+}
+.dossier-tabla th {
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mut);
+  border-bottom: 1px solid var(--line);
+  padding: 6px 10px;
+}
+.dossier-tabla td {
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(27, 36, 54, 0.5);
+  color: var(--ink);
+}
+.dossier-lista {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+.dossier-lista a,
+.dossier-dato a,
+.dossier-v a {
+  color: var(--violet-2);
+  word-break: break-all;
+}
+.dossier-rol {
+  color: var(--dim);
+}
+.dossier-contag {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--violet-2);
+  margin-right: 6px;
+}
+.dossier-crono {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.dossier-crono li {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px;
+  font-size: 13.5px;
+  color: var(--ink);
+  border-left: 2px solid var(--line);
+  padding-left: 14px;
+}
+.dossier-fecha {
+  color: var(--violet-2);
+}
+.dossier-pie {
+  margin-top: 34px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--dim);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* ===================== IMPRESIÓN ===================== */
+@media print {
+  .osint-explora {
+    grid-template-columns: 1fr;
+  }
+  .og-item:hover {
+    background: none;
+  }
+  /* Dossier en PDF: documento en blanco, limpio y legible. */
+  .dossier {
+    max-width: none;
+    padding: 0;
+  }
+  .dossier-doc {
+    background: #fff !important;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    color: #111;
+  }
+  .dossier-cab,
+  .dossier-sec h2,
+  .dossier-pie {
+    border-color: #ccc;
+  }
+  .dossier-cab h1,
+  .dossier-sec h2,
+  .dossier-v,
+  .dossier-identidad h3,
+  .dossier-infra h3,
+  .dossier-hallazgo,
+  .dossier-lista,
+  .dossier-tabla td,
+  .dossier-crono li {
+    color: #111 !important;
+  }
+  .dossier-marca,
+  .dossier-num,
+  .dossier-fecha,
+  .dossier-contag,
+  .dossier-lista a,
+  .dossier-v a {
+    color: #5a34d6 !important;
+  }
+  .dossier-sub,
+  .dossier-k,
+  .dossier-sev,
+  .dossier-conf,
+  .dossier-rol,
+  .dossier-fuentes,
+  .dossier-tabla th,
+  .dossier-pie {
+    color: #555 !important;
+  }
+  .dossier-hallazgo {
+    background: #f5f5f8 !important;
+  }
+  .sev-alta .dossier-sev {
+    color: #c01d3f !important;
+  }
+  .dossier-tabla td,
+  .dossier-tabla th {
+    border-color: #ddd !important;
+  }
+  .dossier-sec,
+  .dossier-identidad,
+  .dossier-infra,
+  .dossier-hallazgo,
+  .dossier-tabla tr {
+    break-inside: avoid;
+  }
+}

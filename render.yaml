@@ -1,0 +1,22 @@
+# Despliegue de ATALAYA en Render como Blueprint.
+# En Render: New + -> Blueprint, apunta a este repositorio y se crea el servicio
+# con esta configuración. El plan gratuito duerme a los 15 min sin visitas.
+services:
+  - type: web
+    name: atalaya
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    autoDeploy: true
+    healthCheckPath: /api/salud
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: ATALAYA_LIMITE_DIARIO
+        value: "25"
+      # Opcional: clave de NVD para CVSS autoritativo. Sin ella funciona con
+      # Shodan CVEDB (CVSS + EPSS + KEV), que no necesita clave.
+      # - key: ATALAYA_NVD_KEY
+      #   sync: false

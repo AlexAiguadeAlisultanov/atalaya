@@ -1,0 +1,580 @@
+/* Estilos de la portada cinematográfica. El lenguaje visual (color, tipografía,
+   corner-brackets) sale de index.css; aquí va la puesta en escena: el canvas
+   fijo del fondo, las capas de post y el HUD de cinta de vídeo. */
+
+.landing {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Fondo cinematográfico + post ---------- */
+.l-cine {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  display: block;
+}
+.l-fx {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.l-fx > * {
+  position: absolute;
+  inset: 0;
+}
+/* Viñeteado: oscurece bordes para empujar la mirada al centro. */
+.l-fx-vig {
+  background:
+    radial-gradient(120% 90% at 50% 50%, transparent 46%, rgba(2, 3, 7, 0.72) 100%),
+    linear-gradient(180deg, rgba(2, 3, 7, 0.55) 0%, transparent 18%, transparent 80%, rgba(2, 3, 7, 0.65) 100%);
+}
+/* Scanlines muy tenues, el toque de monitor. */
+.l-fx-scan {
+  opacity: 0.5;
+  background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.022) 0 1px, transparent 1px 3px);
+}
+/* Aberración cromática leve en los bordes. */
+.l-fx-crom {
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(130% 100% at 0% 50%, rgba(124, 92, 255, 0.05), transparent 36%),
+    radial-gradient(130% 100% at 100% 50%, rgba(255, 45, 85, 0.045), transparent 36%);
+}
+/* Grano de película: ruido fractal estático con un leve parpadeo. */
+.l-fx-grano {
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: l-grano 0.6s steps(2) infinite;
+}
+@keyframes l-grano {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(-6px, 4px); }
+  100% { transform: translate(5px, -3px); }
+}
+
+/* Las secciones van por encima del fondo y del post. */
+.l-hero,
+.l-scroller,
+.l-estatico,
+.l-outro,
+.l-foot {
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------- HERO ---------- */
+.l-hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 120px 24px 48px;
+  gap: 26px;
+}
+.l-hero h1 {
+  font-family: var(--disp);
+  letter-spacing: 0.02em;
+  line-height: 0.98;
+  font-size: clamp(42px, 8vw, 104px);
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #ffffff, #9aa4bd);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 60px rgba(124, 92, 255, 0.25);
+}
+.l-hero-sub {
+  max-width: 640px;
+  color: var(--mut);
+  font-size: clamp(15px, 2vw, 19px);
+  line-height: 1.55;
+  margin: 0;
+}
+.termwrap {
+  width: min(680px, 92vw);
+  overflow: hidden;
+  box-shadow: 0 30px 80px -40px rgba(124, 92, 255, 0.5);
+}
+.term {
+  padding: 20px 20px 26px;
+  font-family: var(--mono);
+  font-size: clamp(13px, 1.6vw, 15px);
+  text-align: left;
+  min-height: 92px;
+  line-height: 1.7;
+}
+.term .ty {
+  color: var(--ink);
+}
+.caret {
+  display: inline-block;
+  width: 9px;
+  height: 1.15em;
+  vertical-align: -2px;
+  background: var(--violet);
+  margin-left: 3px;
+  animation: parpadeo 1s steps(1) infinite;
+}
+@keyframes parpadeo {
+  50% { opacity: 0; }
+}
+.l-hint {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--dim);
+  text-transform: uppercase;
+  margin: 0;
+}
+.l-hint::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 34px;
+  margin: 12px auto 0;
+  background: linear-gradient(var(--violet), transparent);
+  animation: caida 1.8s ease-in-out infinite;
+}
+@keyframes caida {
+  0%, 100% { opacity: 0.2; transform: scaleY(0.6); }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+
+/* ---------- PLANO FIJADO ---------- */
+.l-scroller {
+  position: relative;
+  height: 680vh;
+}
+.l-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* HUD de cinta */
+.l-rec {
+  position: absolute;
+  top: 88px;
+  left: 26px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--mut);
+}
+.l-rec i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--crit);
+  box-shadow: 0 0 10px var(--crit);
+  animation: l-rec 1.4s ease-in-out infinite;
+}
+@keyframes l-rec {
+  50% { opacity: 0.25; }
+}
+.l-timecode {
+  position: absolute;
+  left: 26px;
+  top: 50%;
+  transform: translateY(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  color: var(--dim);
+}
+.l-phase {
+  position: absolute;
+  left: 26px;
+  bottom: 34px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: var(--violet-2);
+  text-transform: uppercase;
+}
+.l-count {
+  position: absolute;
+  right: 30px;
+  top: 92px;
+  text-align: right;
+  font-family: var(--mono);
+  color: var(--mut);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+}
+.l-count span {
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+.l-count b {
+  display: block;
+  font-family: var(--disp);
+  font-size: 40px;
+  color: var(--ink);
+  font-weight: 700;
+  text-shadow: 0 0 24px rgba(124, 92, 255, 0.4);
+}
+.l-caption {
+  position: absolute;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-family: var(--disp);
+  font-weight: 600;
+  font-size: clamp(20px, 3vw, 36px);
+  letter-spacing: 0.01em;
+  max-width: 82vw;
+  transition: opacity 0.4s ease;
+  text-wrap: balance;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.8);
+}
+
+/* Riel de capítulos a la derecha */
+.l-riel {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  z-index: 3;
+}
+.l-riel-btn {
+  --p: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  background: none;
+  border: 0;
+  padding: 2px 0;
+}
+.l-riel-btn i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--surf1);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.l-riel-btn em {
+  display: none;
+}
+.l-riel-btn span {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mut);
+  opacity: 0;
+  transform: translateX(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+.l-riel-btn:hover span,
+.l-riel-btn:focus-visible span {
+  opacity: 1;
+  transform: translateX(0);
+}
+.l-riel-btn[style*='--p: 1'] i,
+.l-riel-btn i {
+  border-color: color-mix(in srgb, var(--violet) calc(var(--p) * 100%), var(--line));
+}
+.l-riel-btn i {
+  box-shadow: 0 0 calc(var(--p) * 14px) color-mix(in srgb, var(--violet) 70%, transparent);
+  background: color-mix(in srgb, var(--violet) calc(var(--p) * 90%), var(--surf1));
+}
+
+/* Carga simulada de la secuencia */
+.l-loader {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  transition: opacity 0.5s ease;
+}
+.l-loader--fin {
+  opacity: 0;
+  pointer-events: none;
+}
+.l-loader-txt {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--mut);
+}
+.l-loader-pista {
+  width: 180px;
+  height: 2px;
+  background: var(--line);
+  overflow: hidden;
+}
+.l-loader-barra {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform-origin: left;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, var(--violet), var(--violet-2));
+}
+
+/* Saltar intro */
+.l-skip {
+  position: absolute;
+  right: 26px;
+  bottom: 34px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mut);
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 4px 2px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.l-skip:hover {
+  color: var(--ink);
+  border-color: var(--violet);
+}
+
+/* Beats en texto para el modo estático */
+.l-beats {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+  max-width: 560px;
+}
+.l-beats li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-left: 2px solid var(--line);
+  padding-left: 14px;
+}
+.l-beats-ph {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--violet-2);
+}
+.l-beats-txt {
+  font-family: var(--disp);
+  font-weight: 600;
+  font-size: clamp(16px, 2.2vw, 22px);
+  color: var(--ink);
+}
+
+/* ---------- Cockpit de cierre ---------- */
+.l-cockpit {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform, opacity;
+}
+.l-panel {
+  width: min(1040px, 94vw);
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 22px;
+}
+.gaugebox {
+  padding: 26px;
+  text-align: center;
+}
+.gaugebox h3 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  color: var(--mut);
+  text-transform: uppercase;
+  margin: 0 0 6px;
+  font-weight: 500;
+}
+.gauge {
+  position: relative;
+  display: inline-block;
+  margin: 6px auto 0;
+}
+.l-bits {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--mut);
+  border: 1px solid var(--line);
+  border-radius: var(--r-m);
+  padding: 12px 14px;
+  background: var(--surf1);
+}
+.bar b {
+  font-family: var(--disp);
+  font-size: 18px;
+  color: var(--ink);
+}
+.l-list {
+  overflow: hidden;
+  margin-top: 2px;
+}
+.l-list header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+}
+.l-list header span {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: var(--mut);
+  text-transform: uppercase;
+}
+.l-row {
+  display: grid;
+  grid-template-columns: 22px 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(27, 36, 54, 0.6);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+.l-row:last-child {
+  border-bottom: 0;
+}
+.rank {
+  color: var(--dim);
+}
+.asset {
+  color: var(--ink);
+}
+.asset small {
+  color: var(--dim);
+  display: block;
+  font-size: 11px;
+}
+
+/* ---------- OUTRO ---------- */
+.l-outro {
+  min-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 22px;
+  padding: 60px 24px;
+}
+.l-outro h2 {
+  font-family: var(--disp);
+  text-transform: uppercase;
+  font-size: clamp(30px, 6vw, 72px);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+.l-outro-sub {
+  color: var(--mut);
+  max-width: 580px;
+  margin: 0;
+  line-height: 1.6;
+}
+.l-foot {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+  padding: 30px;
+  text-align: center;
+}
+
+/* ---------- Respaldo estático (sin pin) ---------- */
+.l-estatico {
+  position: relative;
+  padding: 40px 24px 20px;
+}
+.l-stage--estatico {
+  position: static;
+  height: auto;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+.l-stage--estatico .l-cockpit {
+  position: static;
+  inset: auto;
+  opacity: 1 !important;
+  transform: none !important;
+}
+.l-stage--estatico .l-timecode {
+  position: static;
+  transform: none;
+  writing-mode: horizontal-tb;
+}
+.l-caption--estatico,
+.l-phase--estatico {
+  position: static;
+  transform: none;
+}
+
+@media (max-width: 760px) {
+  .l-panel {
+    grid-template-columns: 1fr;
+  }
+  .l-riel {
+    display: none;
+  }
+  .l-count {
+    top: 78px;
+  }
+  .l-caption {
+    bottom: 54px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .caret,
+  .l-hint::after,
+  .l-rec i,
+  .l-fx-grano,
+  .l-caption {
+    animation: none;
+  }
+}

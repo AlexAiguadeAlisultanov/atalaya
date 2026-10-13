@@ -1,0 +1,416 @@
+/* Sistema visual de ATALAYA: HUD oscuro de ciberseguridad.
+   Tokens fijos (color, tipografía, escala de 8). Un único acento violeta. La
+   escala de severidad es la misma en nodos, pills, bordes y gauge. */
+
+:root {
+  /* Fondos en capas */
+  --base: #080a12;
+  --surf1: #0b0f17;
+  --surf2: #121826;
+  --line: #1b2436;
+
+  /* Texto */
+  --ink: #e7ecf5;
+  --mut: #8a96ad;
+  --dim: #5a6478;
+
+  /* Acento único del proyecto */
+  --violet: #7c5cff;
+  --violet-2: #9b82ff;
+
+  /* Severidad (idéntica en todo) */
+  --crit: #ff2d55;
+  --high: #ff6b35;
+  --med: #f5a524;
+  --low: #3b82f6;
+  --ok: #00e6a0;
+
+  /* Tipografía */
+  --disp: 'Chakra Petch', 'Space Grotesk', system-ui, sans-serif;
+  --body: 'Space Grotesk', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Radios reutilizados */
+  --r-s: 8px;
+  --r-m: 12px;
+  --r-l: 16px;
+  --r-xl: 20px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  margin: 0;
+  background: var(--base);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+button {
+  font-family: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 700;
+}
+
+a {
+  color: var(--violet-2);
+}
+
+/* ---------- Capas de ambiente ---------- */
+.fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.fondo-rejilla {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(124, 92, 255, 0.035) 1px, transparent 1px) 0 0 / 44px 44px,
+    linear-gradient(90deg, rgba(124, 92, 255, 0.035) 1px, transparent 1px) 0 0 / 44px 44px,
+    radial-gradient(130% 90% at 50% 0%, transparent 55%, rgba(0, 0, 0, 0.85) 100%);
+}
+.fondo-grano {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+}
+.fondo-scan {
+  position: absolute;
+  inset: 0;
+  opacity: 0.32;
+  background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 3px);
+}
+
+/* ---------- Tipografía de apoyo ---------- */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.32em;
+  color: var(--violet-2);
+  text-transform: uppercase;
+  margin: 0;
+}
+.mono {
+  font-family: var(--mono);
+}
+
+/* ---------- Cabecera ---------- */
+.cabecera {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px;
+  background: linear-gradient(180deg, rgba(8, 10, 18, 0.92), rgba(8, 10, 18, 0));
+  backdrop-filter: blur(6px);
+}
+.marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--disp);
+  letter-spacing: 0.32em;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--ink);
+}
+.marca b {
+  color: var(--violet-2);
+}
+.marca-boton {
+  background: none;
+  border: 0;
+  padding: 0;
+}
+.marca-punto {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--violet);
+  box-shadow: 0 0 14px var(--violet);
+}
+.cabecera-nav {
+  display: flex;
+  gap: 24px;
+}
+.cabecera-nav button {
+  background: none;
+  border: 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--mut);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 0;
+  transition: color 0.18s ease;
+}
+.cabecera-nav button:hover {
+  color: var(--ink);
+}
+.cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 9px 15px;
+  border-radius: var(--r-s);
+  background: linear-gradient(180deg, rgba(124, 92, 255, 0.16), rgba(124, 92, 255, 0.04));
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+.cta:hover {
+  border-color: var(--violet);
+}
+.cta:active {
+  transform: translateY(1px);
+}
+
+/* ---------- Botones ---------- */
+.boton {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: #0a0c14;
+  font-weight: 700;
+  border: 0;
+  padding: 12px 20px;
+  border-radius: var(--r-s);
+  background: linear-gradient(180deg, var(--violet-2), var(--violet));
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.boton:hover {
+  box-shadow: 0 14px 40px -18px var(--violet);
+}
+.boton:active {
+  transform: translateY(1px);
+}
+.boton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.boton-sec {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  background: var(--surf1);
+  padding: 11px 18px;
+  border-radius: var(--r-s);
+  transition: border-color 0.18s ease;
+}
+.boton-sec:hover {
+  border-color: var(--violet);
+}
+.boton-grande {
+  font-family: var(--mono);
+  letter-spacing: 0.14em;
+  font-size: 14px;
+  text-transform: uppercase;
+  padding: 16px 30px;
+  border-radius: var(--r-m);
+  border: 0;
+  color: #0a0c14;
+  font-weight: 700;
+  background: linear-gradient(180deg, var(--violet-2), var(--violet));
+  box-shadow: 0 20px 60px -24px var(--violet);
+  transition: transform 0.18s ease;
+}
+.boton-grande:active {
+  transform: translateY(1px);
+}
+
+/* ---------- Paneles glass + corner-brackets ---------- */
+.panel-glass {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--r-l);
+  background: linear-gradient(180deg, var(--surf1), rgba(18, 24, 38, 0.6));
+  backdrop-filter: blur(8px);
+}
+.esq {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--violet);
+  pointer-events: none;
+}
+.esq1 { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+.esq2 { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
+.esq3 { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
+.esq4 { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+
+/* ---------- Pills e insignias ---------- */
+.pill {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  border: 1px solid;
+  white-space: nowrap;
+}
+.kev {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--crit);
+  border: 1px solid rgba(255, 45, 85, 0.4);
+  padding: 3px 8px;
+  border-radius: var(--r-s);
+  white-space: nowrap;
+}
+.kev-off {
+  color: var(--dim);
+  border-color: var(--line);
+}
+.riesgo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+}
+.riesgo-barra {
+  width: 46px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+.riesgo-relleno {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--violet), var(--violet-2));
+}
+.riesgo b {
+  font-size: 13px;
+  color: var(--ink);
+  min-width: 22px;
+  text-align: right;
+}
+
+/* ---------- Gauge (compartido portada + herramienta) ---------- */
+.gauge-num {
+  font-family: var(--disp);
+  font-weight: 700;
+  font-size: 62px;
+}
+.gauge-sub {
+  font-family: var(--mono);
+  font-size: 12px;
+  fill: var(--mut);
+  letter-spacing: 2px;
+}
+.gauge-ctx {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--mut);
+  letter-spacing: 0.04em;
+  margin-top: 6px;
+  text-align: center;
+}
+
+/* ---------- Iconos ---------- */
+.icono {
+  flex: none;
+}
+
+/* ---------- Terminal (portada y pantalla de análisis) ---------- */
+.termbar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.termbar i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2a3348;
+  display: inline-block;
+}
+.termbar b {
+  margin-left: 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+}
+.pr {
+  color: var(--violet-2);
+  font-family: var(--mono);
+}
+
+/* ---------- Pulso de las vulnerabilidades en explotación activa (KEV) ---------- */
+.kevpulse {
+  animation: kev 1.4s ease-in-out infinite;
+  filter: drop-shadow(0 0 5px rgba(255, 45, 85, 0.6));
+}
+@keyframes kev {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* ---------- Carga diferida ---------- */
+.cargando-vista {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ---------- Hoja de impresión del informe ---------- */
+@media print {
+  .fondo,
+  .fondo-estelar,
+  .cabecera,
+  .no-imprimir {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #111;
+  }
+  .herramienta,
+  .resultado {
+    background: #fff;
+  }
+}
